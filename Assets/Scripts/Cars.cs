@@ -13,6 +13,7 @@ public class Cars : MonoBehaviour
         gamerules = GameObject.Find("Game rules").GetComponent<GameRules>();
     }
 
+
     void FixedUpdate() {
         speed = gamerules.GetComponent<GameRules>().get_speed();
         transform.position += new Vector3(0f, 0f,  -speed*Time.deltaTime);
@@ -28,4 +29,6 @@ public class Cars : MonoBehaviour
         }
 
     }
+
+
 }

@@ -90,6 +90,8 @@ public class GameRules : MonoBehaviour
         return res;
     }
 
+
+
     public void add_score(int s = 1){
         score = score + s;
         score_text.text = "score : " + score;

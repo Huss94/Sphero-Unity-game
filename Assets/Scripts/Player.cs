@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     private Vector3 cam_offset = new Vector3(0, 1, -3f);
     private GameRules gamerules;
+    private GameObject cam;
 
     void Start()
     {
@@ -14,7 +15,7 @@ public class Player : MonoBehaviour
         gamerules = GameObject.Find("Game rules").GetComponent<GameRules>();
         
 
-        GameObject cam = GameObject.Find("Main Camera");
+        cam = GameObject.Find("Main Camera");
         cam.transform.position = transform.position + cam_offset;
     }
 
@@ -29,6 +30,8 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightArrow) && transform.position.x <=0){
             transform.position += new Vector3(1.4f, 0f, 0);
         }
+        // Demander au prof
+        cam.transform.position = transform.position + cam_offset;
         
     }
         
