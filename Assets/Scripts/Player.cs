@@ -6,11 +6,19 @@ public class Player : MonoBehaviour
 {
     // Start is called before the first frame update
     [System.NonSerialized] public float speed = 0;
+    [System.NonSerialized] public bool steel_mode;
 
     private GameRules gamerules;
     private Rigidbody rb;
     private Vector3 desired_position;
     private AudioSource audiosource;
+    private Renderer p_renderer;
+
+    private Color gold_color = new Color(0.59f,0.4f,0.03f,1f);
+    private Color steel_color = new Color(0.356f,0.345f,0.314f,1f);
+
+
+    // AUDIO 
     private AudioClip snare;
     private AudioClip tss;
     private AudioClip pff;
@@ -28,6 +36,10 @@ public class Player : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         desired_position = transform.position;
+
+        steel_mode = false;
+        p_renderer = GetComponent<Renderer>();
+        p_renderer.material.SetColor("_Color", gold_color);
         
 
     }
@@ -38,14 +50,17 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftArrow)){
             desired_position = compute_desired_pos(Vector3.left);
-            Debug.Log("desired " + desired_position);
             
         }
         if (Input.GetKeyDown(KeyCode.RightArrow)){
-
             desired_position = compute_desired_pos(Vector3.right);
-
         }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow)){
+            changeMode();
+        }
+
+
 
         Vector3 smooth_mvmt = Vector3.Lerp(transform.position, desired_position, 20*Time.deltaTime);
         transform.position = new Vector3(smooth_mvmt.x, transform.position.y, transform.position.z);
@@ -55,16 +70,34 @@ public class Player : MonoBehaviour
     void FixedUpdate(){
 
         if (gamerules.game_started){
-            // rb.AddForce(new Vector3(0,-9.8f,0), ForceMode.Acceleration);
-            // rb.MovePosition(transform.position + Vector3.forward * speed * Time.deltaTime);
-            // rb.AddForce(new Vector3(0,0,speed));
-
             // On ne cherche pas un mouvement réalise, on veut seulement que la sphere roule.
-            rb.velocity = new Vector3(rb.velocity.x,rb.velocity.y,speed);
-            Debug.Log(rb.velocity);
+            float s; 
+            if (steel_mode){
+                s = speed*1.5f;
+            }
+            else{
+                s = speed;
+            }
 
+
+            rb.velocity = new Vector3(rb.velocity.x,rb.velocity.y,s);
+
+            Debug.Log("Speed : " + s);
         }
 
+    }
+
+    void changeMode(){
+        if (steel_mode){
+            p_renderer.material.SetColor("_Color", gold_color);
+            steel_mode = false;
+        }
+
+        else{
+
+            p_renderer.material.SetColor("_Color", steel_color);
+            steel_mode = true;
+        }
     }
 
     Vector3 compute_desired_pos(Vector3 mv_direction){
@@ -101,9 +134,17 @@ public class Player : MonoBehaviour
     }
 
         
-    private void OnTriggerEnter(Collider other) {
+
+    private void OnCollisionEnter(Collision other) {
         if (other.gameObject.CompareTag("Wall")){
-            gamerules.game_over();
+            if (!steel_mode){
+                gamerules.game_over();
+            }
+            else{
+                other.gameObject.GetComponent<Wall>().explode();
+                gamerules.add_score();
+
+            }
         }
         
     }

@@ -6,19 +6,11 @@ using UnityEngine;
 
 public class GameRules : MonoBehaviour
 {
-    [SerializeField] private GameObject carPrefab;
     [SerializeField] private float initial_speed = 5;
-    [SerializeField] private float max_speed = 20;
+    [SerializeField] private float max_speed = 15;
 
-
-
-    private float last_time_spawn = 0;
     private Player player;
-    private GameObject last_car;
-    private float z_spawn_position;
-    private float security_distance;
     private int score = 0;
-    private float speed = 0;
 
     [System.NonSerialized]
     public bool game_started = false;
@@ -27,7 +19,6 @@ public class GameRules : MonoBehaviour
     private GameObject start_text;
 
     void Start(){
-        speed = 0;
         score = 0;
 
         game_started = false;
@@ -37,9 +28,7 @@ public class GameRules : MonoBehaviour
         score_text = GameObject.Find("Score").GetComponent<TextMeshProUGUI>();
         start_text = GameObject.Find("Start");
 
-        z_spawn_position = player.transform.position.z + 20; 
-        last_car = make_cars_spawn();
-        player.speed = 5;
+        player.speed = 0;
 
     }
 
@@ -49,9 +38,10 @@ public class GameRules : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space)){
             Debug.Log("Game_started = Tre");
             game_started = true;
-            speed = initial_speed;
+            player.speed = initial_speed;
             start_text.SetActive(false);
             score_text.text = "Score : 0";
+            player.transform.position = new Vector3(0,0.35f,0);
         }
 
         if (game_started){
@@ -101,12 +91,10 @@ public class GameRules : MonoBehaviour
         score_text.text = "score : " + score;
 
         // Increasig the speed value 
-        speed = Mathf.Min(initial_speed + score/25, max_speed);
+        player.speed = Mathf.Min(initial_speed + score/5, max_speed);
     }
 
-    public float get_speed(){
-        return speed;
-    }
+
 
     public void game_over(){
         start_text.GetComponent<TextMeshProUGUI>().text = "Perdu \n Appuyez sur espace pour commencer la partie !" ;

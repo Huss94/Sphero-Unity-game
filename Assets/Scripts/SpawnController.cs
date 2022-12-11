@@ -9,7 +9,8 @@ public class SpawnController : MonoBehaviour
 {
 
     [System.NonSerialized] public int[] lanes = new int[3] {-1, 0, 1};
-    private Object prefab; 
+    private Object wall; 
+    private Object coin;
     private GameRules gr;
     private GameObject p;
     private Queue<string> queue = new Queue<string>();
@@ -18,6 +19,8 @@ public class SpawnController : MonoBehaviour
 
     private int min_spawn_distance = 5;
 
+    private bool has_begun = false;
+
 
     
 
@@ -25,7 +28,8 @@ public class SpawnController : MonoBehaviour
     {
         Pattern_creation(Patterns);
 
-        prefab = Resources.Load("Prefabs/Wall");
+        wall = Resources.Load("Prefabs/Wall");
+        coin = Resources.Load("Prefabs/Coin");
         gr = GameObject.Find("Game rules").GetComponent<GameRules>();
         p = GameObject.Find("Player");
 
@@ -35,11 +39,27 @@ public class SpawnController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        make_wall_spawn();
+        if (gr.game_started){
+            if (!has_begun){
+                first_spawning();
+                has_begun = true;
+            }
+            make_wall_spawn();
+        }
+        else{
+            has_begun = false;
+
+        }
     }
 
-    public void make_wall_spawn(){
-        float z_spawn = p.transform.position.z + 50;
+    void first_spawning(){
+        for (int i = 20; i < 55; i+=5){
+            make_wall_spawn(i);
+        }
+    }
+
+    public void make_wall_spawn(int spawn_offset = 50){
+        float z_spawn = p.transform.position.z + spawn_offset;
         if (queue.Count < 1){
             int id = Random.Range(0, Patterns.Count); 
             enqueue_pattern_in_queue(queue, Patterns[id]);
@@ -52,17 +72,18 @@ public class SpawnController : MonoBehaviour
             // Test si la queue n'est pas vide
             string s = queue.Dequeue();
 
-            Spawn(prefab, s, z_spawn);
+            Spawn(s, z_spawn);
             last_z_spawn = z_spawn;
             min_spawn_distance = 5;
         }
+
 
     }
 
 
 
 
-    Object Spawn(Object pref, string s, float z, float y = 0.5f){
+    Object Spawn(string s, float z, float y = 0.5f){
         if (s.Length != 3){
             Debug.LogError("Bad spawning shape");
             return null;
@@ -74,8 +95,14 @@ public class SpawnController : MonoBehaviour
         
             val = int.Parse(s[i].ToString());
             if (val == 1){
+                Vector3 v = new Vector3(lanes[i], y+0.5f, z);
+                c = Instantiate(wall, v, Quaternion.Euler(-90,0,0));
+
+            }
+            else{
+
                 Vector3 v = new Vector3(lanes[i], y, z);
-                c = Instantiate(pref, v, Quaternion.identity);
+                c = Instantiate(coin, v, Quaternion.Euler(0,90,90));
 
             }
 

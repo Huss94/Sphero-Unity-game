@@ -9,12 +9,14 @@ public class CameraFollower : MonoBehaviour
     private Player p;
     private Transform p_pos;
     private Vector3 cam_offset = new Vector3(0, 1, -3f);
+    private Camera cam;
 
     void Start()
     {
         Player = GameObject.Find("Player");
         p = Player.GetComponent<Player>();
         p_pos = Player.GetComponent<Transform>();
+        cam = GetComponent<Camera>();
 
     }
 
@@ -22,7 +24,21 @@ public class CameraFollower : MonoBehaviour
     void Update()
     {
         Follow_ball();
+
+        ChangeFov();
     }
+
+    void ChangeFov(){
+        if (p.steel_mode){
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 75, 5*Time.deltaTime);
+        }
+        else{
+
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60, 5*Time.deltaTime);
+        }
+
+    }
+
 
     void Follow_ball(){
 

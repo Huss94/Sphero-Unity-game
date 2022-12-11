@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 218218704}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -427,7 +427,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3ed9a6cc0adb02e58a6b2dba88e3dfbc, type: 2}
+  - {fileID: 2100000, guid: ef5f7c3022d77f6889b03f0dbe2c2685, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -486,7 +486,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 2
+  m_Constraints: 6
   m_CollisionDetection: 0
 --- !u!82 &218218704
 AudioSource:
@@ -613,9 +613,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcfd46cbafa232727a6f32eb6bba1db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carPrefab: {fileID: 3102274227347772430, guid: 6b561c37bc19f5e2f805ee28bc948176, type: 3}
-  initial_speed: 10
-  max_speed: 20
+  initial_speed: 5
+  max_speed: 15
 --- !u!4 &543319613
 Transform:
   m_ObjectHideFlags: 0
@@ -803,7 +802,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.4, z: -10}
+  m_LocalPosition: {x: 0, y: 1.4, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1013,7 +1012,6 @@ GameObject:
   - component: {fileID: 2010037457}
   - component: {fileID: 2010037456}
   - component: {fileID: 2010037455}
-  - component: {fileID: 2010037459}
   - component: {fileID: 2010037460}
   m_Layer: 0
   m_Name: Plane
@@ -1095,25 +1093,12 @@ Transform:
   m_GameObject: {fileID: 2010037454}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 1, z: 100}
+  m_LocalScale: {x: 0.3, y: 1, z: 1000}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2010037459
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2010037454}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0b75108347fd8a6ab010cd276dc8ce2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  yspeed: -0.21
 --- !u!65 &2010037460
 BoxCollider:
   m_ObjectHideFlags: 0
