@@ -9,6 +9,7 @@ public class GameRules : MonoBehaviour
     [SerializeField] private float initial_speed = 5;
     [SerializeField] private float max_speed = 15;
 
+    private GameObject plane;
     private Player player;
     private int score = 0;
 
@@ -23,6 +24,7 @@ public class GameRules : MonoBehaviour
 
         game_started = false;
 
+        plane = Resources.Load<GameObject>("Prefabs/plane");
         player = GameObject.Find("Player").GetComponent<Player>();
 
         score_text = GameObject.Find("Score").GetComponent<TextMeshProUGUI>();
@@ -35,7 +37,7 @@ public class GameRules : MonoBehaviour
 
     void Update(){ 
         // Security distance control indirectemetn la vitesses d'apparation des voitures
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if(!game_started && Input.GetKeyDown(KeyCode.Space)){
             Debug.Log("Game_started = Tre");
             game_started = true;
             player.speed = initial_speed;
@@ -44,20 +46,20 @@ public class GameRules : MonoBehaviour
             player.transform.position = new Vector3(0,0.35f,0);
         }
 
-        if (game_started){
+        // if (game_started){
 
-        if(Input.GetKeyDown(KeyCode.V)){
-            player.speed  = player.speed + 5;
-        }
-
-
-        if(Input.GetKeyDown(KeyCode.M)){
-            player.speed  = player.speed - 5;
-        }
+        // if(Input.GetKeyDown(KeyCode.V)){
+        //     player.speed  = player.speed + 5;
+        // }
 
 
+        // if(Input.GetKeyDown(KeyCode.M)){
+        //     player.speed  = player.speed - 5;
+        // }
 
-        }
+
+
+        // }
 
     }
 

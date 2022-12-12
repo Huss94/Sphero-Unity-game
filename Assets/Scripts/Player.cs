@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     [System.NonSerialized] public float speed = 0;
     [System.NonSerialized] public bool steel_mode;
+    public Texture steel;
+    public Texture gold;
 
     private GameRules gamerules;
     private Rigidbody rb;
@@ -14,8 +16,8 @@ public class Player : MonoBehaviour
     private AudioSource audiosource;
     private Renderer p_renderer;
 
-    private Color gold_color = new Color(0.59f,0.4f,0.03f,1f);
-    private Color steel_color = new Color(0.356f,0.345f,0.314f,1f);
+    // private Color gold_color = new Color(0.59f,0.4f,0.03f,1f);
+    // private Color steel_color = new Color(0.356f,0.345f,0.314f,1f);
 
 
     // AUDIO 
@@ -39,7 +41,7 @@ public class Player : MonoBehaviour
 
         steel_mode = false;
         p_renderer = GetComponent<Renderer>();
-        p_renderer.material.SetColor("_Color", gold_color);
+        // p_renderer.material.SetColor("_Color", gold_color);
         
 
     }
@@ -47,6 +49,28 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
+
+        if (Input.GetKeyDown(KeyCode.A) | Input.GetKeyDown(KeyCode.J)){
+            desired_position = Vector3.left;
+            audiosource.PlayOneShot(pff);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z) | Input.GetKeyDown(KeyCode.K)){
+            desired_position = Vector3.zero;
+            audiosource.PlayOneShot(snare);
+        }
+
+        if (Input.GetKeyDown(KeyCode.E) | Input.GetKeyDown(KeyCode.L)){
+            desired_position = Vector3.right;
+            audiosource.PlayOneShot(tss);
+        }
+
+        if (gamerules.game_started && Input.GetKeyDown(KeyCode.Space)){
+            changeMode();
+        }
+
 
         if (Input.GetKeyDown(KeyCode.LeftArrow)){
             desired_position = compute_desired_pos(Vector3.left);
@@ -56,9 +80,9 @@ public class Player : MonoBehaviour
             desired_position = compute_desired_pos(Vector3.right);
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow)){
-            changeMode();
-        }
+        // if (Input.GetKeyDown(KeyCode.DownArrow)){
+        //     changeMode();
+        // }
 
 
 
@@ -82,20 +106,22 @@ public class Player : MonoBehaviour
 
             rb.velocity = new Vector3(rb.velocity.x,rb.velocity.y,s);
 
-            Debug.Log("Speed : " + s);
+            // Debug.Log("Speed : " + s);
         }
 
     }
 
     void changeMode(){
         if (steel_mode){
-            p_renderer.material.SetColor("_Color", gold_color);
+            // p_renderer.material.SetColor("_Color", gold_color);
+            p_renderer.material.SetTexture("_MainTex", gold);
             steel_mode = false;
         }
 
         else{
 
-            p_renderer.material.SetColor("_Color", steel_color);
+            // p_renderer.material.SetColor("_Color", steel_color);
+            p_renderer.material.SetTexture("_MainTex", steel);
             steel_mode = true;
         }
     }
