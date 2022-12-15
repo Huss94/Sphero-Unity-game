@@ -15,6 +15,11 @@ public class Player : MonoBehaviour
     private Vector3 desired_position;
     private AudioSource audiosource;
     private Renderer p_renderer;
+    private progessBar progbar;
+
+    [System.NonSerialized] public float speed_multiplier = 1;
+    
+    [System.NonSerialized] public bool can_use_power;
 
     // private Color gold_color = new Color(0.59f,0.4f,0.03f,1f);
     // private Color steel_color = new Color(0.356f,0.345f,0.314f,1f);
@@ -35,12 +40,15 @@ public class Player : MonoBehaviour
 
         transform.position = new Vector3(0f,0.35f, 0f);
         gamerules = GameObject.Find("Game rules").GetComponent<GameRules>();
+        progbar = GameObject.Find("Slider").GetComponent<progessBar>();
+        p_renderer = GetComponent<Renderer>();
 
         rb = GetComponent<Rigidbody>();
+
         desired_position = transform.position;
 
+        can_use_power = false;
         steel_mode = false;
-        p_renderer = GetComponent<Renderer>();
         // p_renderer.material.SetColor("_Color", gold_color);
         
 
@@ -68,7 +76,9 @@ public class Player : MonoBehaviour
         }
 
         if (gamerules.game_started && Input.GetKeyDown(KeyCode.Space)){
-            changeMode();
+            if (can_use_power){
+                StartCoroutine("changeMode");
+            }
         }
 
 
@@ -95,35 +105,29 @@ public class Player : MonoBehaviour
 
         if (gamerules.game_started){
             // On ne cherche pas un mouvement réalise, on veut seulement que la sphere roule.
-            float s; 
-            if (steel_mode){
-                s = speed*1.5f;
-            }
-            else{
-                s = speed;
-            }
 
+            rb.velocity = new Vector3(rb.velocity.x,rb.velocity.y,speed * speed_multiplier);
 
-            rb.velocity = new Vector3(rb.velocity.x,rb.velocity.y,s);
-
-            // Debug.Log("Speed : " + s);
         }
 
     }
 
-    void changeMode(){
-        if (steel_mode){
-            // p_renderer.material.SetColor("_Color", gold_color);
-            p_renderer.material.SetTexture("_MainTex", gold);
-            steel_mode = false;
-        }
+    IEnumerator changeMode(){
+        steel_mode = true;
+        can_use_power = false;
+        // Explosion animation ///////////////// and play a sound
 
-        else{
+        p_renderer.material.SetTexture("_MainTex", steel);
+        GameObject speed_part = Instantiate(Resources.Load("Prefabs/speed_part") as GameObject, Vector3.zero, Quaternion.identity);
+        IEnumerator coroutine = progbar.use_power(10);
 
-            // p_renderer.material.SetColor("_Color", steel_color);
-            p_renderer.material.SetTexture("_MainTex", steel);
-            steel_mode = true;
-        }
+        progbar.StartCoroutine(coroutine);
+        yield return new WaitWhile(progbar.is_using_power);
+
+        steel_mode = false;
+        Destroy(speed_part.gameObject);
+        p_renderer.material.SetTexture("_MainTex", gold);
+
     }
 
     Vector3 compute_desired_pos(Vector3 mv_direction){
@@ -168,7 +172,7 @@ public class Player : MonoBehaviour
             }
             else{
                 other.gameObject.GetComponent<Wall>().explode();
-                gamerules.add_score();
+                // gamerules.add_score();
 
             }
         }

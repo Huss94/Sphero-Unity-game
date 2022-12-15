@@ -69,14 +69,9 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Player")){
-            if (!other.gameObject.GetComponent<Player>().steel_mode){
                 gr.add_score();
                 audiosrc.Play();
                 StartCoroutine("collectedAnimation");
-            }
-            else{
-                gr.game_over();
-        }
      }
     }
 }

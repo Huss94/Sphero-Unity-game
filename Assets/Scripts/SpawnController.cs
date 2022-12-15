@@ -120,7 +120,7 @@ public class SpawnController : MonoBehaviour
     void Pattern_creation(List<List<string>> pattern){
         // CREATION DES PATTTERNS DE JEU
         List<string> p1 = new List<string>(); 
-        p1.Add("011"); p1.Add("101"); p1.Add("110");
+        p1.Add("011"); p1.Add("101"); p1.Add("110"); p1.Add("011");
 
         List<string> p2 = new List<string>(); 
         p2.Add("110"); p2.Add("011"); p2.Add("110"); p2.Add("101");
